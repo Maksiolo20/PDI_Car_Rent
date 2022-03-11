@@ -1,10 +1,36 @@
+using Microsoft.EntityFrameworkCore;
+using Pdi_Car_Rent.Data;
+
+var options = new DbContextOptionsBuilder<DatabaseContext>()
+   .UseInMemoryDatabase(databaseName: "PDI_Car_Rent");
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<DatabaseContext>(x =>
+    x.UseInMemoryDatabase(databaseName: "PDI_Car_Rent"));
+
 
 var app = builder.Build();
 
+
+
+//using (var context = new DatabaseContext(options))
+//{
+//    var customer = new Customer
+//    {
+//        FirstName = "Elizabeth",
+//        LastName = "Lincoln",
+//        Address = "23 Tsawassen Blvd."
+//    };
+
+//    context.Customers.Add(customer);
+//    context.SaveChanges();
+
+//}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

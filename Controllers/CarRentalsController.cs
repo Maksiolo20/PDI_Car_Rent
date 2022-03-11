@@ -1,21 +1,33 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Pdi_Car_Rent.Data;
+using PdI_Car_Rent.Data;
 using PdI_Car_Rent.Models;
 
 namespace PdI_Car_Rent.Controllers
 {
     public class CarRentalsController : Controller
     {
-        public CarRentPlaceItemViewModel _model { get; set; } = new CarRentPlaceItemViewModel();
-        public CarRentalsController()
+        private readonly DatabaseContext _context;
+        public CarRentPlaceItemViewModel Model { get; set; }
+        public CarRentalsController(DatabaseContext context)
         {
-            
-            _model.CarRentPlacesList.Add(new CarRentPlaceViewModel() { PlaceId = 1, Address = "adres1", PlaceName = "Wypożyczalnia1" });
+            _context = context;
+            _context.CarRentPlace.Add(
+                new CarRentPlaceViewModel() { 
+                    Address = "adres1",
+                    PlaceName = "Wypożyczalnia1",
+                    Cars = new List<Car>(){
+                        new Car(){Name = "new car"}
+                    }
+                });
+            _context.SaveChanges();
+            Model = new CarRentPlaceItemViewModel(_context);
         }
         [HttpGet]
         public IActionResult Index()
         {
             
-            return View(_model);
+            return View(Model);
         }
         [HttpGet]
         public IActionResult Create()
@@ -25,13 +37,14 @@ namespace PdI_Car_Rent.Controllers
         [HttpPost]
         public IActionResult Create(CarRentPlaceViewModel model)
         {
-            _model.CarRentPlacesList.Add(model);
+            _context.CarRentPlace.Add(model);
+            _context.SaveChanges();
             return RedirectToAction(nameof (Index));
         }
         [HttpGet ("Id")]
         public IActionResult Details(int id)
         {
-            return View(_model.CarRentPlacesList.FirstOrDefault(x=>x.PlaceId==id));
+            return View(_context.CarRentPlace.FirstOrDefault(x=>x.PlaceId==id));
         }
     }
 }
