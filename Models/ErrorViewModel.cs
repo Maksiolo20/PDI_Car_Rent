@@ -1,4 +1,4 @@
-namespace Pdi_Car_Rent.Models
+namespace PdI_Car_Rent.Models
 {
     public class ErrorViewModel
     {

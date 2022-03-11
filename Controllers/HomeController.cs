@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pdi_Car_Rent.Models;
+using PdI_Car_Rent.Models;
 using System.Diagnostics;
 
-namespace Pdi_Car_Rent.Controllers
+namespace PdI_Car_Rent.Controllers
 {
     public class HomeController : Controller
     {
@@ -15,7 +15,8 @@ namespace Pdi_Car_Rent.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            HomeModel model = new HomeModel();
+            return View(model);
         }
 
         public IActionResult Privacy()

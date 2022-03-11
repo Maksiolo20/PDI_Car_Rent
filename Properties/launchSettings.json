@@ -3,16 +3,16 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:57461",
+      "applicationUrl": "http://localhost:5899",
       "sslPort": 0
     }
   },
   "profiles": {
-    "Pdi_Car_Rent": {
+    "PdI_Car_Rent": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5262",
+      "applicationUrl": "http://localhost:5022",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
