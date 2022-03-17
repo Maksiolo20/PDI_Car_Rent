@@ -17,7 +17,6 @@ namespace Pdi_Car_Rent.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // configures one-to-many relationship
             modelBuilder.Entity<Car>()
                 .HasOne<CarType>(x => x.CarType)
                 .WithMany(y => y.Cars)
