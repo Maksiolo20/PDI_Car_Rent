@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PdI_Car_Rent.Models;
 using PdI_Car_Rent.Data;
 
 namespace Pdi_Car_Rent.Data
@@ -14,16 +16,20 @@ namespace Pdi_Car_Rent.Data
     {
         private readonly DatabaseContext _context;
 
-        public CarsController(DatabaseContext context)
+        private readonly IMapper _mapper;
+        public CarsController(DatabaseContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: Cars
         public async Task<IActionResult> Index()
         {
-            var databaseContext = _context.Cars.Include(c => c.CarRentPlace).Include(c => c.CarType);
-            return View(await databaseContext.ToListAsync());
+            var applicationDbContext = _context.Cars.Include(s => s.CarType);
+            var Cars = applicationDbContext.ToList();
+            var viewModel = Cars.Select(r => _mapper.Map<CarIndexViewModel>(r));
+            return View(viewModel);
         }
 
         // GET: Cars/Details/5
@@ -35,15 +41,15 @@ namespace Pdi_Car_Rent.Data
             }
 
             var car = await _context.Cars
-                .Include(c => c.CarRentPlace)
-                .Include(c => c.CarType)
+                .Include(s => s.CarType)
                 .FirstOrDefaultAsync(m => m.CarId == id);
+            var viewModel = _mapper.Map<CarDetailsViewModel>(car);
             if (car == null)
             {
                 return NotFound();
             }
 
-            return View(car);
+            return View(viewModel);
         }
 
         // GET: Cars/Create

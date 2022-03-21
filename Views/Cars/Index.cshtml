@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PdI_Car_Rent.Data.Car>
+﻿@model IEnumerable<PdI_Car_Rent.Models.CarIndexViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -24,9 +24,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.CarType)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.CarRentPlace)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -42,12 +42,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.CarInfo)
             </td>
-            <td>
+           @* <td>
                 @Html.DisplayFor(modelItem => item.CarType.CarTypeId)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CarRentPlace.PlaceId)
-            </td>
+            </td>*@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CarId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.CarId">Details</a> |

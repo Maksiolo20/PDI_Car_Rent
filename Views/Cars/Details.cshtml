@@ -1,4 +1,4 @@
-﻿@model PdI_Car_Rent.Data.Car
+﻿@model PdI_Car_Rent.Models.CarDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -31,15 +31,15 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CarType)
         </dt>
-        <dd class = "col-sm-10">
+@*        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CarType.CarTypeId)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CarRentPlace)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CarRentPlace.PlaceId)
-        </dd>
+            @Html.DisplayFor(model => model.carrentplace.placeid)
+        </dd>*@
     </dl>
 </div>
 <div>
