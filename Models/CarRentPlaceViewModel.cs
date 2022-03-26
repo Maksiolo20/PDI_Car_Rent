@@ -9,6 +9,6 @@ namespace Pdi_Car_Rent.Models
         public int PlaceId { get; set; }
         public string PlaceName { get; set; }
         public string Address { get; set; }
-        public List<Car> Cars { get; set; }
+        public List<Car>? Cars { get; set; }
     }
 }

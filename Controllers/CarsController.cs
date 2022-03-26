@@ -17,10 +17,35 @@ namespace Pdi_Car_Rent.Data
         private readonly DatabaseContext _context;
 
         private readonly IMapper _mapper;
+
+        public List<CarType> Types { get; set; } = new() {
+            new CarType { /*CarTypeId = 1,*/ Name = "Combi" }, 
+            new CarType { /*CarTypeId = 2,*/ Name = "Sedan" } };
+        public List<CarRentPlaceViewModel> Places { get; set; } = new() { 
+            new CarRentPlaceViewModel { /*CarTypeId = 1,*/ PlaceName = "Bielsko-Biała", Address="Willowa 2" }, 
+            new CarRentPlaceViewModel { /*CarTypeId = 2,*/ PlaceName = "Katowice", Address="Shooperów 96" } };
         public CarsController(DatabaseContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
+
+            foreach (var item in Types)
+            {
+                if (_context.CarTypes.Select(x => x.Name == item.Name).Any())
+                    continue;
+                else
+                _context.CarTypes.Add(item);
+            }
+
+            foreach (var item in Places)
+            {
+                if (_context.CarRentPlace.Select(x => x.PlaceName == item.PlaceName).Any())
+                    continue;
+                else
+                    _context.CarRentPlace.Add(item);
+            }
+
+            _context.SaveChanges();
         }
 
         // GET: Cars
@@ -55,8 +80,8 @@ namespace Pdi_Car_Rent.Data
         // GET: Cars/Create
         public IActionResult Create()
         {
-            ViewData["CarRentPlaceID"] = new SelectList(_context.CarRentPlace, "PlaceId", "PlaceId");
-            ViewData["CarTypeId"] = new SelectList(_context.CarTypes, "CarTypeId", "CarTypeId");
+            ViewData["CarRentPlaceID"] = new SelectList(_context.CarRentPlace, "PlaceId", "PlaceName");
+            ViewData["CarTypeId"] = new SelectList(_context.CarTypes, "CarTypeId", "Name"/*, car.CarTypeId*/);
             return View();
         }
 
@@ -73,9 +98,9 @@ namespace Pdi_Car_Rent.Data
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarRentPlaceID"] = new SelectList(_context.CarRentPlace, "PlaceId", "PlaceId", car.CarRentPlaceID);
-            ViewData["CarTypeId"] = new SelectList(_context.CarTypes, "CarTypeId", "CarTypeId", car.CarTypeId);
-            return View(car);
+            ViewData["CarRentPlaceID"] = new SelectList(_context.CarRentPlace, "PlaceId", "PlaceName", car.CarRentPlaceID);
+            ViewData["CarTypeId"] = new SelectList(_context.CarTypes, "CarTypeId", "Name"/*, car.CarTypeId*/);
+            return View();
         }
 
         // GET: Cars/Edit/5
@@ -85,7 +110,7 @@ namespace Pdi_Car_Rent.Data
             {
                 return NotFound();
             }
-            var car =  _context.Cars.Find(id);
+            var car = _context.Cars.Find(id);
             CarEditViewModel model = new CarEditViewModel
             {
                 CarTypeList = _context.CarTypes.ToList()
