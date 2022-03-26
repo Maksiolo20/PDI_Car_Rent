@@ -1,6 +1,6 @@
 ﻿using Pdi_Car_Rent.Data;
 
-namespace PdI_Car_Rent.Models
+namespace Pdi_Car_Rent.Models
 {
     public class CarRentPlaceItemViewModel
     {

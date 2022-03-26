@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PdI_Car_Rent.Data;
-using PdI_Car_Rent.Models;
+using Pdi_Car_Rent.Data;
+using Pdi_Car_Rent.Models;
 
 namespace Pdi_Car_Rent.Data
 {

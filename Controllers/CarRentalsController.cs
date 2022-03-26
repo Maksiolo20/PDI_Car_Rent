@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pdi_Car_Rent.Data;
-using PdI_Car_Rent.Data;
-using PdI_Car_Rent.Models;
+using Pdi_Car_Rent.Models;
 
-namespace PdI_Car_Rent.Controllers
+namespace Pdi_Car_Rent.Controllers
 {
     public class CarRentalsController : Controller
     {

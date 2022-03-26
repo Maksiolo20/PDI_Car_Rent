@@ -1,8 +1,8 @@
 ﻿using Pdi_Car_Rent.Data;
-using PdI_Car_Rent.Models;
+using Pdi_Car_Rent.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace PdI_Car_Rent.Models
+namespace Pdi_Car_Rent.Models
 {
     public class CarDetailsViewModel
     {

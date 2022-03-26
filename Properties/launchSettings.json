@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "PdI_Car_Rent": {
+    "Pdi_Car_Rent": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

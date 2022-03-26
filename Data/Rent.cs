@@ -1,4 +1,4 @@
-﻿using PdI_Car_Rent.Data;
+﻿using Pdi_Car_Rent.Data;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pdi_Car_Rent.Data

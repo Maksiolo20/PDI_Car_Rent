@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PdI_Car_Rent.Models;
+using Pdi_Car_Rent.Models;
 using System.Diagnostics;
 
-namespace PdI_Car_Rent.Controllers
+namespace Pdi_Car_Rent.Controllers
 {
     public class HomeController : Controller
     {

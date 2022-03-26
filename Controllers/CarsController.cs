@@ -7,8 +7,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using PdI_Car_Rent.Models;
-using PdI_Car_Rent.Data;
+using Pdi_Car_Rent.Models;
+using Pdi_Car_Rent.Data;
 
 namespace Pdi_Car_Rent.Data
 {
@@ -85,15 +85,19 @@ namespace Pdi_Car_Rent.Data
             {
                 return NotFound();
             }
+            var car =  _context.Cars.Find(id);
+            CarEditViewModel model = new CarEditViewModel
+            {
+                CarTypeList = _context.CarTypes.ToList()
+            };
 
-            var car = await _context.Cars.FindAsync(id);
-            if (car == null)
+            if (model == null)
             {
                 return NotFound();
             }
-            ViewData["CarRentPlaceID"] = new SelectList(_context.CarRentPlace, "PlaceId", "PlaceId", car.CarRentPlaceID);
-            ViewData["CarTypeId"] = new SelectList(_context.CarTypes, "CarTypeId", "CarTypeId", car.CarTypeId);
-            return View(car);
+            ViewData["CarRentPlaceID"] = new SelectList(_context.CarRentPlace, "PlaceId", "PlaceId", model.CarRentPlaceID);
+            ViewData["CarTypeId"] = new SelectList(_context.CarTypes, "CarTypeId", "CarTypeId", model.CarTypeId);
+            return View(model);
         }
 
         // POST: Cars/Edit/5
