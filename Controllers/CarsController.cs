@@ -130,18 +130,16 @@ namespace Pdi_Car_Rent.Data
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CarId,Name,RentPriceForHour,CarInfo,CarTypeId,CarRentPlaceID")] Car car)
+        public async Task<IActionResult> Edit([FromRoute] int id, [Bind("CarId,Name,RentPriceForHour,CarInfo,CarTypeId,CarRentPlaceID")] Car car)
         {
-            if (id != car.CarId)
-            {
-                return NotFound();
-            }
-
+            car.CarId = id;
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(car);
+                    var toRemove = _context.Cars.First(x => x.CarId == id);
+                    _context.Cars.Remove(toRemove);
+                    _context.Cars.Add(car);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -155,11 +153,11 @@ namespace Pdi_Car_Rent.Data
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Edit));
+                return RedirectToAction(nameof(Index));
             }
             ViewData["CarRentPlaceID"] = new SelectList(_context.CarRentPlace, "PlaceId", "PlaceId", car.CarRentPlaceID);
             ViewData["CarTypeId"] = new SelectList(_context.CarTypes, "CarTypeId", "CarTypeId", car.CarTypeId);
-            return View(car);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Cars/Delete/5
