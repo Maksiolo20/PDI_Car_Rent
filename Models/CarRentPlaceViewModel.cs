@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pdi_Car_Rent.Models
 {
-    public class CarRentPlaceViewModel
+    public class CarRentPlaceViewModel : IEntity<int>
     {
         [Key]
-        public int PlaceId { get; set; }
+        public int Id { get; set; }
         public string PlaceName { get; set; }
         public string Address { get; set; }
         public List<Car>? Cars { get; set; }

@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pdi_Car_Rent.Data
 {
-    public class Car
+    public class Car : IEntity<int>
     {
         [Key]
-        public int CarId { get; set; }
+        public int Id { get; set; }
         public string? Name { get; set; }
         public int? RentPriceForHour { get; set; }
         public string? CarInfo { get; set; }

@@ -14,45 +14,55 @@ namespace Pdi_Car_Rent.Data
 {
     public class CarsController : Controller
     {
-        private readonly DatabaseContext _context;
-
+        private readonly IRepositoryService<CarType> _carTypeRepository;
+        private readonly IRepositoryService<CarRentPlaceViewModel> _carPlaceRepository;
+        private readonly IRepositoryService<Car> _carRepository;
         private readonly IMapper _mapper;
 
-        public List<CarType> Types { get; set; } = new() {
-            new CarType { /*CarTypeId = 1,*/ Name = "Combi" }, 
-            new CarType { /*CarTypeId = 2,*/ Name = "Sedan" } };
-        public List<CarRentPlaceViewModel> Places { get; set; } = new() { 
-            new CarRentPlaceViewModel { PlaceName = "Bielsko-Biała", Address="Willowa 2" }, 
-            new CarRentPlaceViewModel { PlaceName = "Katowice", Address="Kościuszki 96" } };
-        public CarsController(DatabaseContext context, IMapper mapper)
+        public List<CarType> Types { get; set; } = new()
         {
-            _context = context;
+            new CarType { /*CarTypeId = 1,*/ Name = "Combi" },
+            new CarType { /*CarTypeId = 2,*/ Name = "Sedan" }
+        };
+        public List<CarRentPlaceViewModel> Places { get; set; } = new()
+        {
+            new CarRentPlaceViewModel { PlaceName = "Bielsko-Biała", Address = "Willowa 2" },
+            new CarRentPlaceViewModel { PlaceName = "Katowice", Address = "Kościuszki 96" }
+        };
+        public CarsController(IRepositoryService<CarType> carTypeRepository,
+            IRepositoryService<Car> carRepository,
+            IRepositoryService<CarRentPlaceViewModel> carPlaceRepository,
+            IMapper mapper)
+        {
+            _carTypeRepository = carTypeRepository;
+            _carPlaceRepository = carPlaceRepository;
+            _carRepository = carRepository;
             _mapper = mapper;
 
             foreach (var item in Types)
             {
-                if (_context.CarTypes.Select(x => x.Name == item.Name).Any())
+                if (_carTypeRepository.GetAllRecords().Any())
                     continue;
                 else
-                _context.CarTypes.Add(item);
+                    _carTypeRepository.Add(item);
             }
 
             foreach (var item in Places)
             {
-                if (_context.CarRentPlace.Select(x => x.PlaceName == item.PlaceName).Any())
+                if (_carPlaceRepository.GetAllRecords().Any())
                     continue;
                 else
-                    _context.CarRentPlace.Add(item);
+                    _carPlaceRepository.Add(item);
             }
 
-            _context.SaveChanges();
+            _carTypeRepository.Save();
+            _carPlaceRepository.Save();
         }
 
         // GET: Cars
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Cars.Include(s => s.CarType);
-            var Cars = applicationDbContext.ToList();
+            var Cars = _carRepository.GetAllRecords().ToList();
             var viewModel = Cars.Select(r => _mapper.Map<CarIndexViewModel>(r));
             return View(viewModel);
         }
@@ -65,9 +75,7 @@ namespace Pdi_Car_Rent.Data
                 return NotFound();
             }
 
-            var car = await _context.Cars
-                .Include(s => s.CarType)
-                .FirstOrDefaultAsync(m => m.CarId == id);
+            var car = _carRepository.FindBy(x => x.Id == id);
             var viewModel = _mapper.Map<CarDetailsViewModel>(car);
             if (car == null)
             {
@@ -80,8 +88,8 @@ namespace Pdi_Car_Rent.Data
         // GET: Cars/Create
         public IActionResult Create()
         {
-            ViewData["CarRentPlaceID"] = new SelectList(_context.CarRentPlace, "PlaceId", "PlaceName");
-            ViewData["CarTypeId"] = new SelectList(_context.CarTypes, "CarTypeId", "Name"/*, car.CarTypeId*/);
+            ViewData["CarRentPlaceID"] = new SelectList(_carRepository.GetAllRecords(), "PlaceId", "PlaceName");
+            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "CarTypeId", "Name"/*, car.CarTypeId*/);
             return View();
         }
 
@@ -94,12 +102,12 @@ namespace Pdi_Car_Rent.Data
         {
             if (ModelState.IsValid)
             {
-                _context.Add(car);
-                await _context.SaveChangesAsync();
+                _carRepository.Add(car);
+                _carRepository.Save();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarRentPlaceID"] = new SelectList(_context.CarRentPlace, "PlaceId", "PlaceName"/*,car.CarRentPlaceID*/);
-            ViewData["CarTypeId"] = new SelectList(_context.CarTypes, "CarTypeId", "Name"/*, car.CarTypeId*/);
+            ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "PlaceId", "PlaceName"/*,car.CarRentPlaceID*/);
+            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "CarTypeId", "Name"/*, car.CarTypeId*/);
             return View();
         }
 
@@ -110,7 +118,7 @@ namespace Pdi_Car_Rent.Data
             {
                 return NotFound();
             }
-            var car = _context.Cars.Find(id);
+            var car = _carRepository.FindBy(x => x.Id == id);
             CarEditViewModel model = new CarEditViewModel
             {
                 //CarTypeList = _context.CarTypes.ToList()
@@ -120,8 +128,8 @@ namespace Pdi_Car_Rent.Data
             {
                 return NotFound();
             }
-            ViewData["CarRentPlaceID"] = new SelectList(_context.CarRentPlace, "PlaceId", "PlaceName" /*,model.CarRentPlaceID*/);
-            ViewData["CarTypeId"] = new SelectList(_context.CarTypes, "CarTypeId", "Name" /*,model.CarTypeId*/);
+            ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "PlaceId", "PlaceName" /*,model.CarRentPlaceID*/);
+            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "CarTypeId", "Name" /*,model.CarTypeId*/);
             return View(model);
         }
 
@@ -132,19 +140,17 @@ namespace Pdi_Car_Rent.Data
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromRoute] int id, [Bind("CarId,Name,RentPriceForHour,CarInfo,CarTypeId,CarRentPlaceID")] Car car)
         {
-            car.CarId = id;
+            car.Id = id;
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var toRemove = _context.Cars.First(x => x.CarId == id);
-                    _context.Cars.Remove(toRemove);
-                    _context.Cars.Add(car);
-                    await _context.SaveChangesAsync();
+                    _carRepository.Edit(car);
+                    _carRepository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarExists(car.CarId))
+                    if (!CarExists(car.Id))
                     {
                         return NotFound();
                     }
@@ -155,8 +161,8 @@ namespace Pdi_Car_Rent.Data
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarRentPlaceID"] = new SelectList(_context.CarRentPlace, "PlaceId", "PlaceId", car.CarRentPlaceID);
-            ViewData["CarTypeId"] = new SelectList(_context.CarTypes, "CarTypeId", "CarTypeId", car.CarTypeId);
+            ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "PlaceId", "PlaceId", car.CarRentPlaceID);
+            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "CarTypeId", "CarTypeId", car.CarTypeId);
             return RedirectToAction(nameof(Index));
         }
 
@@ -168,10 +174,7 @@ namespace Pdi_Car_Rent.Data
                 return NotFound();
             }
 
-            var car = await _context.Cars
-                .Include(c => c.CarRentPlace)
-                .Include(c => c.CarType)
-                .FirstOrDefaultAsync(m => m.CarId == id);
+            var car = _carRepository.FindBy(m => m.Id == id);
             if (car == null)
             {
                 return NotFound();
@@ -185,15 +188,15 @@ namespace Pdi_Car_Rent.Data
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var car = await _context.Cars.FindAsync(id);
-            _context.Cars.Remove(car);
-            await _context.SaveChangesAsync();
+            var car = _carRepository.FindBy(x => x.Id == id).First();
+            _carRepository.Delete(car);
+            _carRepository.Save();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CarExists(int id)
         {
-            return _context.Cars.Any(e => e.CarId == id);
+            return _carRepository.FindBy(e => e.Id == id).Any();
         }
     }
 }

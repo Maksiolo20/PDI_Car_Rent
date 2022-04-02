@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Pdi_Car_Rent.Data;
 using Pdi_Car_Rent.Mapper;
+using Pdi_Car_Rent.Models;
 
 var options = new DbContextOptionsBuilder<DatabaseContext>()
    .UseInMemoryDatabase(databaseName: "PDI_Car_Rent");
@@ -16,6 +17,7 @@ builder.Services.AddAutoMapper(typeof (MapperConfig));
 builder.Services.AddDbContext<DatabaseContext>(x =>
     x.UseInMemoryDatabase(databaseName: "PDI_Car_Rent"));
 
+builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
 
 var app = builder.Build();
 

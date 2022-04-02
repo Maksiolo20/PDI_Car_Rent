@@ -43,7 +43,7 @@ namespace Pdi_Car_Rent.Controllers
         [HttpGet ("Id")]
         public IActionResult Details(int id)
         {
-            return View(_context.CarRentPlace.FirstOrDefault(x=>x.PlaceId==id));
+            return View(_context.CarRentPlace.FirstOrDefault(x=>x.Id==id));
         }
     }
 }
