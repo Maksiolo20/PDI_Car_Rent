@@ -9,14 +9,17 @@ namespace Pdi_Car_Rent.Mapper
         public MapperConfig()
         {
             CreateMap<Car, CarIndexViewModel>()
-                .ForMember(r => r.CarType, opt => opt.MapFrom<string>(r => r.CarType.Name));
+                .ForMember(r => r.CarType, opt => opt.MapFrom<string>(r => r.CarType.Name))
+                .ForMember(x=>x.CarId,opt =>opt.MapFrom<int>(x=>x.Id));
             CreateMap<Car, CarDetailsViewModel>()
-                .ForMember(r => r.CarType, opt => opt.MapFrom<string>(r => r.CarType.Name));
-
-            CreateMap<Car, CarEditViewModel>()
-                 .ForMember(r => r.CarType, opt => opt.MapFrom<string>(r => r.CarType.Name));
-            CreateMap<Car, CarCreateViewModel>()
-                .ForMember(r => r.CarType, opt => opt.MapFrom<string>(r => r.CarType.Name));
+                .ForMember(r => r.CarType, opt => opt.MapFrom<string>(r => r.CarType.Name))
+                .ForMember(x => x.CarId, opt => opt.MapFrom<int>(x => x.Id));
+            CreateMap<Car, CarEditViewModel>();
+                //.ForMember(r => r.CarType, opt => opt.MapFrom<string>(r => r.CarType.Name))
+                //.ForMember(x => x.CarId, opt => opt.MapFrom<int>(x => x.Id)); ;
+            CreateMap<Car, CarCreateViewModel>();
+                //.ForMember(r => r.CarType, opt => opt.MapFrom<string>(r => r.CarType.Name))
+                //.ForMember(x => x.CarId, opt => opt.MapFrom<int>(x => x.Id)); ;
         }
     }
 }

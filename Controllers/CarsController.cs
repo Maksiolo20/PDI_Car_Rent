@@ -39,20 +39,20 @@ namespace Pdi_Car_Rent.Data
             _carRepository = carRepository;
             _mapper = mapper;
 
-            foreach (var item in Types)
+            if (!_carTypeRepository.GetAllRecords().Any())
             {
-                if (_carTypeRepository.GetAllRecords().Any())
-                    continue;
-                else
+                foreach (var item in Types)
+                {
                     _carTypeRepository.Add(item);
+                }
             }
 
-            foreach (var item in Places)
+            if (!_carPlaceRepository.GetAllRecords().Any())
             {
-                if (_carPlaceRepository.GetAllRecords().Any())
-                    continue;
-                else
+                foreach (var item in Places)
+                {
                     _carPlaceRepository.Add(item);
+                }
             }
 
             _carTypeRepository.Save();
@@ -88,8 +88,8 @@ namespace Pdi_Car_Rent.Data
         // GET: Cars/Create
         public IActionResult Create()
         {
-            ViewData["CarRentPlaceID"] = new SelectList(_carRepository.GetAllRecords(), "PlaceId", "PlaceName");
-            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "CarTypeId", "Name"/*, car.CarTypeId*/);
+            ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "Id", "PlaceName");
+            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "Id", "Name"/*, car.CarTypeId*/);
             return View();
         }
 
@@ -106,12 +106,13 @@ namespace Pdi_Car_Rent.Data
                 _carRepository.Save();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "PlaceId", "PlaceName"/*,car.CarRentPlaceID*/);
-            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "CarTypeId", "Name"/*, car.CarTypeId*/);
+            ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "Id", "PlaceName"/*,car.CarRentPlaceID*/);
+            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "Id", "Name"/*, car.CarTypeId*/);
             return View();
         }
 
         // GET: Cars/Edit/5
+        [HttpGet("Edit/{Id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -128,8 +129,8 @@ namespace Pdi_Car_Rent.Data
             {
                 return NotFound();
             }
-            ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "PlaceId", "PlaceName" /*,model.CarRentPlaceID*/);
-            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "CarTypeId", "Name" /*,model.CarTypeId*/);
+            ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "Id", "PlaceName" /*,model.CarRentPlaceID*/);
+            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "Id", "Name" /*,model.CarTypeId*/);
             return View(model);
         }
 
@@ -138,14 +139,17 @@ namespace Pdi_Car_Rent.Data
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromRoute] int id, [Bind("CarId,Name,RentPriceForHour,CarInfo,CarTypeId,CarRentPlaceID")] Car car)
+        public async Task<IActionResult> Edit([FromRoute]int id, [Bind("CarId,Name,RentPriceForHour,CarInfo,CarTypeId,CarRentPlaceID")] Car car)
         {
             car.Id = id;
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _carRepository.Edit(car);
+                    var n = _carRepository.GetAllRecords().ToList();
+                    var toRemove = _carRepository.FindBy(x => x.Id == id).First();
+                    _carRepository.Delete(toRemove);
+                    _carRepository.Add(car);
                     _carRepository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -161,8 +165,8 @@ namespace Pdi_Car_Rent.Data
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "PlaceId", "PlaceId", car.CarRentPlaceID);
-            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "CarTypeId", "CarTypeId", car.CarTypeId);
+            ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "Id", "PlaceName", car.CarRentPlaceID);
+            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "Id", "Name", car.CarTypeId);
             return RedirectToAction(nameof(Index));
         }
 

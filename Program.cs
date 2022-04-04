@@ -17,7 +17,10 @@ builder.Services.AddAutoMapper(typeof (MapperConfig));
 builder.Services.AddDbContext<DatabaseContext>(x =>
     x.UseInMemoryDatabase(databaseName: "PDI_Car_Rent"));
 
-builder.Services.AddScoped(typeof(IRepositoryService<>), typeof(RepositoryService<>));
+builder.Services.AddScoped<IRepositoryService<CarType>,RepositoryService<CarType>>();
+builder.Services.AddScoped<IRepositoryService<CarRentPlaceViewModel>, RepositoryService<CarRentPlaceViewModel>>();
+builder.Services.AddScoped<IRepositoryService<Car>, RepositoryService<Car>>();
+//builder.Services.AddScoped<IEntity<int>,I
 
 var app = builder.Build();
 
