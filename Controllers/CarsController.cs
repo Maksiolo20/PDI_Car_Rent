@@ -126,6 +126,8 @@ namespace Pdi_Car_Rent.Data
                 CarTypeId= car.CarTypeId,
                 RentPriceForHour = car.RentPriceForHour,    
                 Name = car.Name,
+                CarInfo = car.CarInfo,
+                CarRentPlaceID = car.CarRentPlaceID,
                 //CarTypeList = _context.CarTypes.ToList()
             };
 
