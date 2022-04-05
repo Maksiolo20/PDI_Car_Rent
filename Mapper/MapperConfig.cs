@@ -20,6 +20,7 @@ namespace Pdi_Car_Rent.Mapper
             CreateMap<Car, CarCreateViewModel>();
                 //.ForMember(r => r.CarType, opt => opt.MapFrom<string>(r => r.CarType.Name))
                 //.ForMember(x => x.CarId, opt => opt.MapFrom<int>(x => x.Id)); ;
+            CreateMap<CarEditViewModel, Car>();
         }
     }
 }

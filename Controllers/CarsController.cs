@@ -112,16 +112,20 @@ namespace Pdi_Car_Rent.Data
         }
 
         // GET: Cars/Edit/5
-        [HttpGet("Edit/{Id}")]
+       // [HttpGet("Edit/{Id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var car = _carRepository.FindBy(x => x.Id == id);
+            var car = _carRepository.GetSingle(id.Value);
             CarEditViewModel model = new CarEditViewModel
             {
+                CarId= car.Id,
+                CarTypeId= car.CarTypeId,
+                RentPriceForHour = car.RentPriceForHour,    
+                Name = car.Name,
                 //CarTypeList = _context.CarTypes.ToList()
             };
 
@@ -139,34 +143,37 @@ namespace Pdi_Car_Rent.Data
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromRoute]int id, [Bind("CarId,Name,RentPriceForHour,CarInfo,CarTypeId,CarRentPlaceID")] Car car)
+        public async Task<IActionResult> Edit( CarEditViewModel carViewModel)
         {
-            car.Id = id;
+           
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var n = _carRepository.GetAllRecords().ToList();
-                    var toRemove = _carRepository.FindBy(x => x.Id == id).First();
-                    _carRepository.Delete(toRemove);
-                    _carRepository.Add(car);
+                                      
+                    var toEdit = _carRepository.GetSingle(carViewModel.CarId);
+                    
+                    _mapper.Map<CarEditViewModel, Car>(carViewModel, toEdit);
+                    
+                    _carRepository.Edit(toEdit);
+                  
                     _carRepository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarExists(car.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //if (!CarExists(car.Id))
+                    //{
+                    //    return NotFound();
+                    //}
+                    //else
+                    //{
+                    //    throw;
+                    //}
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "Id", "PlaceName", car.CarRentPlaceID);
-            ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "Id", "Name", car.CarTypeId);
+            //ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "Id", "PlaceName", car.CarRentPlaceID);
+            //ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "Id", "Name", car.CarTypeId);
             return RedirectToAction(nameof(Index));
         }
 
