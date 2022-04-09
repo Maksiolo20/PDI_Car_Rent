@@ -2,18 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Pdi_Car_Rent.Data;
 using Pdi_Car_Rent.Mapper;
 using Pdi_Car_Rent.Models;
-using Microsoft.AspNetCore.Identity;
 
 var options = new DbContextOptionsBuilder<DatabaseContext>()
    .UseInMemoryDatabase(databaseName: "PDI_Car_Rent");
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorPages();
-
-var connectionString = builder.Configuration.GetConnectionString("Pdi_Car_RentContextConnection");builder.Services.AddDbContext<Pdi_Car_RentContext>(options =>
-    options.UseSqlServer(connectionString));builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<Pdi_Car_RentContext>();
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
@@ -53,17 +47,12 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();
+
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints => {
-    endpoints.MapControllerRoute(
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-    endpoints.MapRazorPages();
-    });
-
-
 
 app.Run();
 
