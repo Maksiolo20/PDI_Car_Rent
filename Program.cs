@@ -4,6 +4,7 @@ using Pdi_Car_Rent.Mapper;
 using Pdi_Car_Rent.Models;
 using Microsoft.AspNetCore.Identity;
 using Pdi_Car_Rent.Services;
+using Pdi_Car_Rent.Areas.Identity.Data;
 
 var options = new DbContextOptionsBuilder<DatabaseContext>()
    .UseInMemoryDatabase(databaseName: "PDI_Car_Rent");
@@ -36,12 +37,27 @@ builder.Services.AddScoped<IRepositoryService<CarType>, RepositoryService<CarTyp
 builder.Services.AddScoped<IRepositoryService<CarRentPlaceViewModel>, RepositoryService<CarRentPlaceViewModel>>();
 builder.Services.AddScoped<IRepositoryService<Car>, RepositoryService<Car>>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<SignInManager<IdentityUser>>();
 builder.Services.AddScoped<UserManager<IdentityUser>>();
 builder.Services.AddScoped<ApplicationDbInitializer>();
 
 //builder.Services.AddScoped<IEntity<int>,I
-
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    Pdi_Car_RentUserContext _context =
+        (Pdi_Car_RentUserContext)scope.ServiceProvider.GetService(typeof(Pdi_Car_RentUserContext));
+
+    UserRoleService userRoleService = new UserRoleService(_context);
+    userRoleService.StartingSetup(_context);
+
+    UserManager<IdentityUser> _userManager =
+        (UserManager<IdentityUser>)scope.ServiceProvider.GetService(typeof(UserManager<IdentityUser>));
+
+    ApplicationDbInitializer applicationDbInitializer = new ApplicationDbInitializer(_userManager);
+    applicationDbInitializer.SeedUsers(_userManager);
+}
 
 //using (var context = new DatabaseContext(options))
 //{

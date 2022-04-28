@@ -20,11 +20,11 @@ namespace Pdi_Car_Rent.Controllers
             _userManager = userManager;
             _userContext = userContext;     
 
-            UserRoleService userRoleService = new UserRoleService(_userContext);
-            userRoleService.StartingSetup(_userContext);
+            //UserRoleService userRoleService = new UserRoleService(_userContext);
+            //userRoleService.StartingSetup(_userContext);
 
-            ApplicationDbInitializer applicationDbInitializer = new ApplicationDbInitializer(_userManager);
-            applicationDbInitializer.SeedUsers(_userManager);
+            //ApplicationDbInitializer applicationDbInitializer = new ApplicationDbInitializer(_userManager);
+            //applicationDbInitializer.SeedUsers(_userManager);
 
         }
 
