@@ -1,5 +1,5 @@
-﻿@model Pdi_Car_Rent.Areas.Identity.Data.AddingRoleModel
-
+﻿@model Pdi_Car_Rent.Areas.Identity.Data.MainAdminModel
+e
 @{
     ViewData["Title"] = "AdminPanel";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,19 +8,19 @@
 }
 <div class="card text-white bg-dark mt-5 my-5 mx-auto opacity-card" style="width: 25rem;">
     <div class="card-body">
-        <h3 class="card-title">Panel Administratora</h3>
+        <h3 class="card-title">Zarządzanie Rolami</h3>
         <div class="row">
             <div class="col-sm">
                 <form asp-action="AdminPanel">
                     <div class="form-group my-3">
-                        <label asp-for="User.UserName" class="control-label mr-5 my-3"></label>
+                        <label asp-for="RoleModel.User.UserName" class="control-label mr-5 my-3"></label>
                         <select asp-items="@(List)"
-                                class="form-control" asp-for="User.Id">
+                                class="form-control" asp-for="RoleModel.User.Id">
                             <option value="wybierz">---Wybierz---</option>
                         </select>
-                        <label asp-for="Role.RoleName" class="control-label mr-5 ml-2 my-3"></label>
+                        <label asp-for="RoleModel.Role.RoleName" class="control-label mr-5 ml-2 my-3"></label>
                         <select asp-items="@(RoleList)"
-                                class="form-control" asp-for="Role.Id">
+                                class="form-control" asp-for="RoleModel.Role.Id">
                             <option value="wybierz">---Wybierz---</option>
                         </select>
                     </div>
@@ -29,7 +29,35 @@
                         <div class="alert alert-danger font-weight-bolder">@ViewBag.Warning</div>
                     }
                     <div class="form-group">
-                        <input type="submit" value="Dodaj" class="btn btn-secondary" />
+                        <input type="submit" value="Zmień" class="btn btn-secondary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="card-title">Zarządzanie Adminami Wypożyczalni</h3>
+        <div class="row">
+            <div class="col-sm">
+                <form asp-action="AdminPanelRentPlace">
+                    <div class="form-group my-3">
+                        <label asp-for="RoleModel.User.UserName" class="control-label mr-5 my-3"></label>
+                        <select asp-items="@(List)"
+                                class="form-control" asp-for="RoleModel.User.Id">
+                            <option value="wybierz">---Wybierz---</option>
+                        </select>
+                        <label asp-for="RentPlaceModel.CarRentPlace.PlaceName" class="control-label mr-5 ml-2 my-3"></label>
+                        <select asp-items="@(RoleList)"
+                                class="form-control" asp-for="RentPlaceModel.CarRentPlace.Id">
+                            <option value="wybierz">---Wybierz---</option>
+                        </select>
+                    </div>
+                    @if (@ViewBag.Warning != "")
+                    {
+                        <div class="alert alert-danger font-weight-bolder">@ViewBag.Warning</div>
+                    }
+                    <div class="form-group">
+                        <input type="submit" value="Przydziel" class="btn btn-secondary" />
                     </div>
                 </form>
             </div>

@@ -25,26 +25,26 @@ namespace Pdi_Car_Rent.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AdminPanel(AddingRoleModel userRole)
+        public IActionResult AdminPanel(MainAdminModel userRole)
         {
             bool flag = true;
             foreach (var item in _context.UserRoles)
             {
-                if (item.UserId == userRole.User.Id &&
-                    item.RoleId == userRole.Role.Id.ToString())
+                if (item.UserId == userRole.RoleModel.User.Id &&
+                    item.RoleId == userRole.RoleModel.Role.Id.ToString())
                     return RedirectToAction(nameof(AdminPanel),
                         new { warning = "Ten użytkownik posiada już w tę role" });
             }
             if (flag == true)
             {
-                var result = _context.UserRoles.FirstOrDefault(x => x.UserId == userRole.User.Id);
+                var result = _context.UserRoles.FirstOrDefault(x => x.UserId == userRole.RoleModel.User.Id);
                 if (result != null)
                 {
                     _context.UserRoles.Remove(result);
                     _context.UserRoles.Add(new IdentityUserRole<string>()
                     {
-                        UserId = userRole.User.Id,
-                        RoleId = userRole.Role.Id.ToString()
+                        UserId = userRole.RoleModel.User.Id,
+                        RoleId = userRole.RoleModel.Role.Id.ToString()
                     });
 
                     _context.SaveChanges();
@@ -53,5 +53,42 @@ namespace Pdi_Car_Rent.Controllers
             return RedirectToAction(nameof(AdminPanel));
         }
 
+
+        [HttpGet]
+        public IActionResult AdminPanelRentPlace(string warning = "")
+        {
+            ViewBag.Players = _context.Users.ToList();
+            ViewBag.PlayerRoles = _context.Roles.ToList();
+            ViewBag.Warning = warning;
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AdminPanelRentPlace(MainAdminModel userRole)
+        {
+            bool flag = true;
+            foreach (var item in _context.UserRoles)
+            {
+                if (item.UserId == userRole.RoleModel.User.Id &&
+                    item.RoleId == userRole.RoleModel.Role.Id.ToString())
+                    return RedirectToAction(nameof(AdminPanel),
+                        new { warning = "Ten użytkownik posiada już w tę role" });
+            }
+            if (flag == true)
+            {
+                var result = _context.UserRoles.FirstOrDefault(x => x.UserId == userRole.RoleModel.User.Id);
+                if (result != null)
+                {
+                    _context.UserRoles.Remove(result);
+                    _context.UserRoles.Add(new IdentityUserRole<string>()
+                    {
+                        UserId = userRole.RoleModel.User.Id,
+                        RoleId = userRole.RoleModel.Role.Id.ToString()
+                    });
+
+                    _context.SaveChanges();
+                }
+            }
+            return RedirectToAction(nameof(AdminPanel));
+        }
     }
 }
