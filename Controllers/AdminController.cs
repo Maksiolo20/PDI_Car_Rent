@@ -26,7 +26,12 @@ namespace Pdi_Car_Rent.Controllers
 
             var workerId = _userContext.Roles.First(x => x.Name == "Pracownik").Id;
             var Employees = _userContext.UserRoles.Where(x => x.RoleId == workerId).ToList();
-            ViewBag.Employees = _userContext.Users.Where(x => Employees.All(y => y.UserId == x.Id)).ToList();
+            List<IdentityUser> Workers = new();
+            foreach (var item in Employees)
+            {
+                Workers.Add(_userContext.Users.First(x => x.Id==item.UserId));
+            }
+            ViewBag.Employees = Workers;
             ViewBag.RentPlace = _dbContext.CarRentPlace.ToList();
             return View();
         }
@@ -34,7 +39,7 @@ namespace Pdi_Car_Rent.Controllers
         [HttpPost]
         public IActionResult AdminPanelRentPlace(MainAdminModel role)
         {
-            if (role.roleAction == true)
+            if (role.RoleModel != null)
             {
                 var result = _userContext.UserRoles.FirstOrDefault(x => x.UserId == role.RoleModel.User.Id);
                 if (result != null)
@@ -49,21 +54,18 @@ namespace Pdi_Car_Rent.Controllers
                     _userContext.SaveChanges();
                 }
             }
-            if (role.rentAction == true)
+            if (role.RentPlaceModel != null)
             {
                 var result = _dbContext.CarRentPlace.FirstOrDefault(x => x.Id == role.RentPlaceModel.CarRentPlace.Id);
                 if (result != null)
                 {
-                    _dbContext.UserRoles.Remove(result);
-                    _userContext.UserRoles.Add(new IdentityUserRole<string>()
-                    {
-                        UserId = role.RoleModel.User.Id,
-                        RoleId = role.RoleModel.Role.Id.ToString()
-                    });
-
-                    _userContext.SaveChanges();
+                    _dbContext.CarRentPlace
+                        .First(x=>x.Id==role.RentPlaceModel.CarRentPlace.Id).WorkerId=int.Parse(role.RentPlaceModel.Worker.Id);
+                    _dbContext.SaveChanges();
                 }
             }
+            //var user = _userContext.UserRoles.First(x => x.UserId == role.RoleModel.User.Id);
+            //var role2 = _userContext.Roles.First(x => x.Id == user.RoleId);
             return RedirectToAction(nameof(AdminPanel));
         }
     }
