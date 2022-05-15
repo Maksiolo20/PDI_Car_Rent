@@ -4,5 +4,7 @@
     {
         public AddingRoleModel RoleModel { get; set; }
         public ManageRentPlaceModel RentPlaceModel { get; set; }
+        public bool roleAction;
+        public bool rentAction;
     }
 }

@@ -2,8 +2,8 @@
 @{
     ViewData["Title"] = "AdminPanel";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    SelectList List = new SelectList(ViewBag.Players, "Id", "UserName");
-    SelectList RoleList = new SelectList(ViewBag.PlayerRoles, "Id", "Name");
+    SelectList List = new SelectList(ViewBag.Users, "Id", "UserName");
+    SelectList RoleList = new SelectList(ViewBag.UserRoles, "Id", "Name");
 }
 <div class="card text-white bg-dark mt-5 my-5 mx-auto opacity-card" style="width: 25rem;">
     <div class="card-body">
@@ -23,12 +23,8 @@
                             <option value="wybierz">---Wybierz---</option>
                         </select>
                     </div>
-                    @if (@ViewBag.Warning != "")
-                    {
-                        <div class="alert alert-danger font-weight-bolder">@ViewBag.Warning</div>
-                    }
                     <div class="form-group">
-                        <input type="submit" value="Zmień" class="btn btn-secondary" />
+                        <input type="submit" value="Zmień" class="btn btn-secondary" onclick="Model.roleAction=true"/>
                     </div>
                 </form>
             </div>
@@ -51,10 +47,6 @@
                             <option value="wybierz">---Wybierz---</option>
                         </select>
                     </div>
-                    @if (@ViewBag.Warning != "")
-                    {
-                        <div class="alert alert-danger font-weight-bolder">@ViewBag.Warning</div>
-                    }
                     <div class="form-group">
                         <input type="submit" value="Przydziel" class="btn btn-secondary" />
                     </div>

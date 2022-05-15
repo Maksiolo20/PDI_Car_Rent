@@ -19,74 +19,46 @@ namespace Pdi_Car_Rent.Controllers
             _dbContext = dbContext;
         }
         [HttpGet]
-        public IActionResult AdminPanel(string warning = "")
+        public IActionResult AdminPanel()
         {
-            ViewBag.Players = _userContext.Users.ToList();
-            ViewBag.PlayerRoles = _userContext.Roles.ToList();
-            ViewBag.Warning = warning;
+            ViewBag.Users = _userContext.Users.ToList();
+            ViewBag.UserRoles = _userContext.Roles.ToList();
+
+            var workerId = _userContext.Roles.First(x => x.Name == "Pracownik").Id;
+            var Employees = _userContext.UserRoles.Where(x => x.RoleId == workerId).ToList();
+            ViewBag.Employees = _userContext.Users.Where(x => Employees.All(y => y.UserId == x.Id)).ToList();
+            ViewBag.RentPlace = _dbContext.CarRentPlace.ToList();
             return View();
         }
+
         [HttpPost]
-        public IActionResult AdminPanel(MainAdminModel userRole)
+        public IActionResult AdminPanelRentPlace(MainAdminModel role)
         {
-            bool flag = true;
-            foreach (var item in _userContext.UserRoles)
+            if (role.roleAction == true)
             {
-                if (item.UserId == userRole.RoleModel.User.Id &&
-                    item.RoleId == userRole.RoleModel.Role.Id.ToString())
-                    return RedirectToAction(nameof(AdminPanel),
-                        new { warning = "Ten użytkownik posiada już w tę role" });
-            }
-            if (flag == true)
-            {
-                var result = _userContext.UserRoles.FirstOrDefault(x => x.UserId == userRole.RoleModel.User.Id);
+                var result = _userContext.UserRoles.FirstOrDefault(x => x.UserId == role.RoleModel.User.Id);
                 if (result != null)
                 {
                     _userContext.UserRoles.Remove(result);
                     _userContext.UserRoles.Add(new IdentityUserRole<string>()
                     {
-                        UserId = userRole.RoleModel.User.Id,
-                        RoleId = userRole.RoleModel.Role.Id.ToString()
+                        UserId = role.RoleModel.User.Id,
+                        RoleId = role.RoleModel.Role.Id.ToString()
                     });
 
                     _userContext.SaveChanges();
                 }
             }
-            return RedirectToAction(nameof(AdminPanel));
-        }
-
-
-        [HttpGet]
-        public IActionResult AdminPanelRentPlace(string warning = "")
-        {
-            var workerId = _userContext.Roles.First(x => x.Name == "Pracownik").Id;
-            var Employees = _userContext.UserRoles.Where(x => x.RoleId == workerId).ToList();
-            ViewBag.Employees = _userContext.Users.Where(x=>Employees.All(y=>y.UserId == x.Id)).ToList();
-            var RentPlace = 
-            ViewBag.Warning = warning;
-            return View();
-        }
-        [HttpPost]
-        public IActionResult AdminPanelRentPlace(MainAdminModel userRole)
-        {
-            bool flag = true;
-            foreach (var item in _userContext.UserRoles)
+            if (role.rentAction == true)
             {
-                if (item.UserId == userRole.RoleModel.User.Id &&
-                    item.RoleId == userRole.RoleModel.Role.Id.ToString())
-                    return RedirectToAction(nameof(AdminPanel),
-                        new { warning = "Ten użytkownik posiada już w tę role" });
-            }
-            if (flag == true)
-            {
-                var result = _userContext.UserRoles.FirstOrDefault(x => x.UserId == userRole.RoleModel.User.Id);
+                var result = _dbContext.CarRentPlace.FirstOrDefault(x => x.Id == role.RentPlaceModel.CarRentPlace.Id);
                 if (result != null)
                 {
-                    _userContext.UserRoles.Remove(result);
+                    _dbContext.UserRoles.Remove(result);
                     _userContext.UserRoles.Add(new IdentityUserRole<string>()
                     {
-                        UserId = userRole.RoleModel.User.Id,
-                        RoleId = userRole.RoleModel.Role.Id.ToString()
+                        UserId = role.RoleModel.User.Id,
+                        RoleId = role.RoleModel.Role.Id.ToString()
                     });
 
                     _userContext.SaveChanges();
