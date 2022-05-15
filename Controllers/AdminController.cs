@@ -57,8 +57,9 @@ namespace Pdi_Car_Rent.Controllers
         [HttpGet]
         public IActionResult AdminPanelRentPlace(string warning = "")
         {
-            ViewBag.Players = _context.Users.ToList();
-            ViewBag.PlayerRoles = _context.Roles.ToList();
+            var workerId = _context.Roles.First(x => x.Name == "Pracownik").Id;
+            var Employees = _context.UserRoles.Where(x => x.RoleId == workerId).ToList();
+            ViewBag.Employees = _context.Users.Where(x=>Employees.All(y=>y.UserId == x.Id)).ToList();
             ViewBag.Warning = warning;
             return View();
         }
