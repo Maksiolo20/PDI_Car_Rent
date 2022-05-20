@@ -2,9 +2,9 @@
 {
     public class MainAdminModel
     {
-        public AddingRoleModel RoleModel { get; set; }
-        public ManageRentPlaceModel RentPlaceModel { get; set; }
-        public bool roleAction { get; set; } = false;
-        public bool rentAction { get; set; } = false;
+        public string UserId { get; set; }
+        public string UserRoleId { get; set; }
+        public string WorkerId { get; set; }
+        public int RentPlaceId { get; set; }
     }
 }

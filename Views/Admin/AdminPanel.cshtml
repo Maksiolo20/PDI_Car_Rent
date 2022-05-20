@@ -4,8 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     SelectList List = new SelectList(ViewBag.Users, "Id", "UserName");
     SelectList RoleList = new SelectList(ViewBag.UserRoles, "Id", "Name");
-    SelectList WorkerList = new SelectList(ViewBag.Employees, "Id", "Name");
-    SelectList RentPlace = new SelectList(ViewBag.RentPlace, "Id", "Name");
+    //SelectList WorkerList = new SelectList(ViewBag.Employees, "Id", "Name");
+    SelectList RentPlace = new SelectList(ViewBag.RentPlace, "Id", "PlaceName");
 }
 <div class="card text-white bg-dark mt-5 my-5 mx-auto opacity-card" style="width: 25rem;">
     <div class="card-body">
@@ -14,14 +14,14 @@
             <div class="col-sm">
                 <form asp-action="AdminPanelRentPlace">
                     <div class="form-group my-3">
-                        <label asp-for="RoleModel.User.UserName" class="control-label mr-5 my-3"></label>
+                        @*<label asp-for="RoleModel.User.UserName" class="control-label mr-5 my-3"></label>*@
                         <select asp-items="@(List)"
-                                class="form-control" asp-for="RoleModel.User.Id">
+                                class="form-control" asp-for="UserId">
                             <option value="wybierz">---Wybierz---</option>
                         </select>
-                        <label asp-for="RoleModel.Role.RoleName" class="control-label mr-5 ml-2 my-3"></label>
+                        @*<label asp-for="RoleModel.Role.RoleName" class="control-label mr-5 ml-2 my-3"></label>*@
                         <select asp-items="@(RoleList)"
-                                class="form-control" asp-for="RoleModel.Role.Id">
+                                class="form-control" asp-for="UserRoleId">
                             <option value="wybierz">---Wybierz---</option>
                         </select>
                     </div>
@@ -38,14 +38,14 @@
             <div class="col-sm">
                 <form asp-action="AdminPanelRentPlace">
                     <div class="form-group my-3">
-                        <label asp-for="RoleModel.User.UserName" class="control-label mr-5 my-3"></label>
+                        @*<label asp-for="RentPlaceModel.Worker.UserName" class="control-label mr-5 my-3"></label>*@
                         <select asp-items="@(List)"
-                                class="form-control" asp-for="RoleModel.User.Id">
+                                class="form-control" asp-for="WorkerId">
                             <option value="wybierz">---Wybierz---</option>
                         </select>
-                        <label asp-for="RentPlaceModel.CarRentPlace.PlaceName" class="control-label mr-5 ml-2 my-3"></label>
-                        <select asp-items="@(RoleList)"
-                                class="form-control" asp-for="RentPlaceModel.CarRentPlace.Id">
+                       @* <label asp-for="RentPlaceModel.CarRentPlace.PlaceName" class="control-label mr-5 ml-2 my-3"></label>*@
+                        <select asp-items="@(RentPlace)"
+                                class="form-control" asp-for="RentPlaceId">
                             <option value="wybierz">---Wybierz---</option>
                         </select>
                     </div>
