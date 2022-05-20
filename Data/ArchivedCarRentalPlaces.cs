@@ -1,12 +1,13 @@
-﻿using Pdi_Car_Rent.Data;
+﻿using Pdi_Car_Rent.Models;
 using Pdi_Car_Rent.Services;
 using System.ComponentModel.DataAnnotations;
 
-namespace Pdi_Car_Rent.Models
+namespace Pdi_Car_Rent.Data
 {
-    public class CarRentPlaceViewModel : ICarRentPlace
+    public class ArchivedCarRentalPlaces : ICarRentPlace
     {
         [Key]
+        public int ArchivedId { get; set; }
         public int Id { get; set; }
         public string PlaceName { get; set; }
         public string Address { get; set; }

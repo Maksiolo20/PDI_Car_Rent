@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Pdi_Car_Rent.Data.ArchivedCarRentalPlaces>
+
+@{
+    ViewData["Title"] = "Archived";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Archived</h1>
+
+<p>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlaceName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkerId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlaceName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkerId)
+            </td>
+@*            <td>
+                <a asp-action="Edit" asp-route-id="@item.ArchivedId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ArchivedId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ArchivedId">Delete</a>
+            </td>*@
+        </tr>
+}
+    </tbody>
+</table>

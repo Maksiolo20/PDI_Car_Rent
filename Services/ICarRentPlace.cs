@@ -1,12 +1,10 @@
 ﻿using Pdi_Car_Rent.Data;
-using Pdi_Car_Rent.Services;
-using System.ComponentModel.DataAnnotations;
+using Pdi_Car_Rent.Models;
 
-namespace Pdi_Car_Rent.Models
+namespace Pdi_Car_Rent.Services
 {
-    public class CarRentPlaceViewModel : ICarRentPlace
+    public interface ICarRentPlace : IEntity<int>
     {
-        [Key]
         public int Id { get; set; }
         public string PlaceName { get; set; }
         public string Address { get; set; }
@@ -14,3 +12,4 @@ namespace Pdi_Car_Rent.Models
         public List<Car>? Cars { get; set; }
     }
 }
+

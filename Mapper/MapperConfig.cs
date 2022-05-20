@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Pdi_Car_Rent.Models;
 using Pdi_Car_Rent.Data;
+using Pdi_Car_Rent.Services;
 
 namespace Pdi_Car_Rent.Mapper
 {
@@ -21,6 +22,9 @@ namespace Pdi_Car_Rent.Mapper
                 //.ForMember(r => r.CarType, opt => opt.MapFrom<string>(r => r.CarType.Name))
                 //.ForMember(x => x.CarId, opt => opt.MapFrom<int>(x => x.Id)); ;
             CreateMap<CarEditViewModel, Car>();
+            CreateMap<ArchivedCarRentalPlaces, ICarRentPlace>();
+            CreateMap<ICarRentPlace, ArchivedCarRentalPlaces>();
+            
         }
     }
 }

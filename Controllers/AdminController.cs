@@ -51,7 +51,7 @@ namespace Pdi_Car_Rent.Controllers
                 if (result != null)
                 {
                     _dbContext.CarRentPlace
-                        .First(x=>x.Id==model.RentPlaceId).WorkerId=int.Parse(model.WorkerId);
+                        .First(x=>x.Id==model.RentPlaceId).WorkerId=model.WorkerId;
                     _dbContext.SaveChanges();
                 }
             }

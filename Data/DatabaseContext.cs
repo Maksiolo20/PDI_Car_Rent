@@ -14,6 +14,8 @@ namespace Pdi_Car_Rent.Data
         public DbSet<Rent> Rents { get; set; }
         public DbSet<RentStatus> RentStatuses { get; set; }
         public DbSet<CarRentPlaceViewModel> CarRentPlace { get; set; }
+        public DbSet<ArchivedCarRentalPlaces> ArchivedCarRentalPlaces { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
