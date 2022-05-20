@@ -23,15 +23,6 @@ namespace Pdi_Car_Rent.Controllers
         {
             ViewBag.Users = _userContext.Users.ToList();
             ViewBag.UserRoles = _userContext.Roles.ToList();
-
-            //var workerId = _userContext.Roles.First(x => x.Name == "Pracownik").Id;
-            //var Employees = _userContext.UserRoles.Where(x => x.RoleId == workerId).ToList();
-            //List<IdentityUser> Workers = new();
-            //foreach (var item in Employees)
-            //{
-            //    Workers.Add(_userContext.Users.First(x => x.Id==item.UserId));
-            //}
-            ViewBag.Employees = _userContext.Users.ToList();
             ViewBag.RentPlace = _dbContext.CarRentPlace.ToList();
             return View();
         }
