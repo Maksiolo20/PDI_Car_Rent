@@ -28,11 +28,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="CarRentals" asp-action="Index">Wypożyczalnie</a>
+                        </li>
+                        }
                         @if (User.IsInRole("Administrator") || User.IsInRole("Pracownik"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="CarRentals" asp-action="Index">Wypożyczalnie</a>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Index">Samochody</a>
                             </li>

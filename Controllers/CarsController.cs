@@ -9,11 +9,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pdi_Car_Rent.Models;
 using Pdi_Car_Rent.Data;
+using Microsoft.AspNetCore.Identity;
+using Pdi_Car_Rent.Areas.Identity.Data;
 
 namespace Pdi_Car_Rent.Data
 {
     public class CarsController : Controller
     {
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepositoryService<CarType> _carTypeRepository;
         private readonly IRepositoryService<CarRentPlaceViewModel> _carPlaceRepository;
         private readonly IRepositoryService<Car> _carRepository;
@@ -29,11 +32,14 @@ namespace Pdi_Car_Rent.Data
             new CarRentPlaceViewModel { PlaceName = "Bielsko-Biała", Address = "Willowa 2" },
             new CarRentPlaceViewModel { PlaceName = "Katowice", Address = "Kościuszki 96" }
         };
-        public CarsController(IRepositoryService<CarType> carTypeRepository,
+        public CarsController(
+            IRepositoryService<CarType> carTypeRepository,
             IRepositoryService<Car> carRepository,
             IRepositoryService<CarRentPlaceViewModel> carPlaceRepository,
-            IMapper mapper)
+            IMapper mapper,
+            UserManager<IdentityUser> userManager)
         {
+            _userManager = userManager;
             _carTypeRepository = carTypeRepository;
             _carPlaceRepository = carPlaceRepository;
             _carRepository = carRepository;
@@ -62,7 +68,12 @@ namespace Pdi_Car_Rent.Data
         // GET: Cars
         public async Task<IActionResult> Index()
         {
-            var Cars = _carRepository.GetAllRecords().ToList();
+            string id = _userManager.GetUserId(User);
+            var Cars = _carRepository
+                .GetAllRecords()
+                .Where(x=>x.CarRentPlaceID == _carPlaceRepository
+                                                .GetAllRecords()
+                                                .First(x => x.WorkerId == id).Id);
             var viewModel = Cars.Select(r => _mapper.Map<CarIndexViewModel>(r));
             return View(viewModel);
         }
