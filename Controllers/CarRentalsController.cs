@@ -12,7 +12,8 @@ namespace Pdi_Car_Rent.Controllers
         {
             _context = context;
             _context.CarRentPlace.Add(
-                new CarRentPlaceViewModel() { 
+                new CarRentPlaceViewModel()
+                {
                     Address = "adres1",
                     PlaceName = "Wypożyczalnia1",
                     Cars = new List<Car>(){
@@ -25,7 +26,7 @@ namespace Pdi_Car_Rent.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            
+
             return View(Model);
         }
         [HttpGet]
@@ -38,12 +39,31 @@ namespace Pdi_Car_Rent.Controllers
         {
             _context.CarRentPlace.Add(model);
             _context.SaveChanges();
-            return RedirectToAction(nameof (Index));
+            return RedirectToAction(nameof(Index));
         }
-        [HttpGet ("Id")]
+        [HttpGet]
         public IActionResult Details(int id)
         {
-            return View(_context.CarRentPlace.FirstOrDefault(x=>x.Id==id));
+            return View(_context.CarRentPlace.FirstOrDefault(x => x.Id == id));
+        }
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+
+            return View(_context.CarRentPlace.FirstOrDefault(x => x.Id == id));
+        }
+        [HttpPost]
+        public IActionResult Edit(CarRentPlaceViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var toEdit = _context.CarRentPlace.First(x => x.Id == model.Id);
+                _context.Remove(toEdit);
+                _context.Add(model);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }
