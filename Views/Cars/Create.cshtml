@@ -34,13 +34,16 @@
                     <option value="wybierz">---Wybierz---</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label asp-for="CarRentPlaceID" class="control-label "></label>
-                <select asp-items="@(ViewData["CarRentPlaceID"] as SelectList)"
+            @if (User.IsInRole("Administrator"))
+            {
+                <div class="form-group">
+                    <label asp-for="CarRentPlaceID" class="control-label "></label>
+                    <select asp-items="@(ViewData["CarRentPlaceID"] as SelectList)"
                         class="form-control" asp-for="CarRentPlaceID">
-                    <option value="wybierz">---Wybierz---</option>
-                </select>
-            </div>
+                        <option value="wybierz">---Wybierz---</option>
+                    </select>
+                </div>
+            }
             @*<div class="form-group">
                 <label asp-for="CarRentPlaceID" class="control-label"></label>
                 <select asp-for="CarRentPlaceID" class ="form-control" asp-items="ViewBag.CarRentPlaceID"></select>

@@ -113,6 +113,13 @@ namespace Pdi_Car_Rent.Data
         {
             if (ModelState.IsValid)
             {
+                if (User.IsInRole("Pracownik"))
+                {
+                    string id = _userManager.GetUserId(User);
+                    car.CarRentPlaceID = _carPlaceRepository
+                                                    .GetAllRecords()
+                                                    .First(x => x.WorkerId == id).Id;
+                }
                 _carRepository.Add(car);
                 _carRepository.Save();
                 return RedirectToAction(nameof(Index));
