@@ -43,7 +43,7 @@ namespace Pdi_Car_Rent.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(CarRentPlaceViewModel model)
+        public IActionResult Create(CarRentPlaceViewModel model)    
         {
             _context.CarRentPlace.Add(model);
             _context.SaveChanges();
