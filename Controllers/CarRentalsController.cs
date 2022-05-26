@@ -15,20 +15,17 @@ namespace Pdi_Car_Rent.Controllers
         {
             _mapper = mapper;
             _context = context;
-            if (_context.CarRentPlace.Count() < 1 && _context.ArchivedCarRentalPlaces.Count() < 1)
-            {
-                _context.CarRentPlace.Add(
-                    new CarRentPlaceViewModel()
-                    {
-                        Address = "adres1",
-                        PlaceName = "Wypożyczalnia1",
-                        WorkerId = Guid.NewGuid().ToString(),
-                        Cars = new List<Car>(){
-                        new Car(){Name = "new car"}
-                        }
-                    });
-                _context.SaveChanges();
-            }
+            //if (_context.CarRentPlace.Count() < 1 && _context.ArchivedCarRentalPlaces.Count() < 1)
+            //{
+            //    _context.CarRentPlace.Add(
+            //        new CarRentPlaceViewModel()
+            //        {
+            //            Address = "adres1",
+            //            PlaceName = "Wypożyczalnia1",
+            //            WorkerId = Guid.NewGuid().ToString(),
+            //        });
+            //    _context.SaveChanges();
+            //}
             Model = new CarRentPlaceItemViewModel(_context);
         }
         [HttpGet]

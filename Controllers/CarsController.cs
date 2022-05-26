@@ -22,16 +22,8 @@ namespace Pdi_Car_Rent.Data
         private readonly IRepositoryService<Car> _carRepository;
         private readonly IMapper _mapper;
 
-        public List<CarType> Types { get; set; } = new()
-        {
-            new CarType { /*CarTypeId = 1,*/ Name = "Combi" },
-            new CarType { /*CarTypeId = 2,*/ Name = "Sedan" }
-        };
-        public List<CarRentPlaceViewModel> Places { get; set; } = new()
-        {
-            new CarRentPlaceViewModel { PlaceName = "Bielsko-Biała", Address = "Willowa 2" },
-            new CarRentPlaceViewModel { PlaceName = "Katowice", Address = "Kościuszki 96" }
-        };
+
+
         public CarsController(
             IRepositoryService<CarType> carTypeRepository,
             IRepositoryService<Car> carRepository,
@@ -45,37 +37,28 @@ namespace Pdi_Car_Rent.Data
             _carRepository = carRepository;
             _mapper = mapper;
 
-            if (!_carTypeRepository.GetAllRecords().Any())
-            {
-                foreach (var item in Types)
-                {
-                    _carTypeRepository.Add(item);
-                }
-            }
-
-            if (!_carPlaceRepository.GetAllRecords().Any())
-            {
-                foreach (var item in Places)
-                {
-                    _carPlaceRepository.Add(item);
-                }
-            }
-
-            _carTypeRepository.Save();
-            _carPlaceRepository.Save();
         }
 
         // GET: Cars
         public async Task<IActionResult> Index()
         {
-            string id = _userManager.GetUserId(User);
-            var Cars = _carRepository
-                .GetAllRecords()
-                .Where(x=>x.CarRentPlaceID == _carPlaceRepository
-                                                .GetAllRecords()
-                                                .First(x => x.WorkerId == id).Id).ToList();
-            var viewModel = Cars.Select(r => _mapper.Map<CarIndexViewModel>(r));
-            return View(viewModel);
+
+            List<CarIndexViewModel> cars = new();
+            if (User.IsInRole("Pracownik"))
+            {
+                string id = _userManager.GetUserId(User);
+                var Cars = _carRepository
+                    .GetAllRecords()
+                    .Select(x => x.CarRentPlaceID == _carPlaceRepository
+                                                    .GetAllRecords()
+                                                    .First(x => x.WorkerId == id).Id).ToList();
+                cars = Cars.Select(r => _mapper.Map<CarIndexViewModel>(r)).ToList();
+            }
+            else if (User.IsInRole("Administrator"))
+            {
+                cars = _carRepository.GetAllRecords().Select(r => _mapper.Map<CarIndexViewModel>(r)).ToList();
+            }
+            return View(cars);
         }
 
         // GET: Cars/Details/5
@@ -113,16 +96,16 @@ namespace Pdi_Car_Rent.Data
         {
             //if (ModelState.IsValid)
             //{
-                if (User.IsInRole("Pracownik"))
-                {
-                    string id = _userManager.GetUserId(User);
-                    car.CarRentPlaceID = _carPlaceRepository
-                                                    .GetAllRecords()
-                                                    .First(x => x.WorkerId == id).Id;
-                }
-                _carRepository.Add(car);
-                _carRepository.Save();
-                return RedirectToAction(nameof(Index));
+            if (User.IsInRole("Pracownik"))
+            {
+                string id = _userManager.GetUserId(User);
+                car.CarRentPlaceID = _carPlaceRepository
+                                                .GetAllRecords()
+                                                .First(x => x.WorkerId == id).Id;
+            }
+            _carRepository.Add(car);
+            _carRepository.Save();
+            return RedirectToAction(nameof(Index));
             //}
             ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "Id", "PlaceName"/*,car.CarRentPlaceID*/);
             ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "Id", "Name"/*, car.CarTypeId*/);
@@ -130,7 +113,7 @@ namespace Pdi_Car_Rent.Data
         }
 
         // GET: Cars/Edit/5
-       // [HttpGet("Edit/{Id}")]
+        // [HttpGet("Edit/{Id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -140,9 +123,9 @@ namespace Pdi_Car_Rent.Data
             var car = _carRepository.GetSingle(id.Value);
             CarEditViewModel model = new CarEditViewModel
             {
-                CarId= car.Id,
-                CarTypeId= car.CarTypeId,
-                RentPriceForHour = car.RentPriceForHour,    
+                CarId = car.Id,
+                CarTypeId = car.CarTypeId,
+                RentPriceForHour = car.RentPriceForHour,
                 Name = car.Name,
                 CarInfo = car.CarInfo,
                 CarRentPlaceID = car.CarRentPlaceID,
@@ -163,20 +146,20 @@ namespace Pdi_Car_Rent.Data
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit( CarEditViewModel carViewModel)
+        public async Task<IActionResult> Edit(CarEditViewModel carViewModel)
         {
-           
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                                      
+
                     var toEdit = _carRepository.GetSingle(carViewModel.CarId);
-                    
+
                     _mapper.Map<CarEditViewModel, Car>(carViewModel, toEdit);
-                    
+
                     _carRepository.Edit(toEdit);
-                  
+
                     _carRepository.Save();
                 }
                 catch (DbUpdateConcurrencyException)

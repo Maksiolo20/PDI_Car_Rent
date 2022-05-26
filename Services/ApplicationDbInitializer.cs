@@ -43,6 +43,20 @@ namespace Pdi_Car_Rent.Services
         }
         public void SeedCars()
         {
+            List<Car> Cars = new()
+            {
+                new Car {Name = "Wołga", CarInfo = "Czarna", CarRentPlaceID = 0, CarTypeId = 0, RentPriceForHour = 30 },
+                new Car {Name = "Mazda", CarInfo = "MX-5", CarRentPlaceID = 1, CarTypeId = 1, RentPriceForHour = 40 },
+
+            };
+            foreach (var item in Cars)
+            {
+                _context.Cars.Add(item);
+            }
+            _context.SaveChanges();
+        }
+        public void SeedCarTypes()
+        {
             List<CarType> Types = new()
             {
                 new CarType { /*CarTypeId = 1,*/ Name = "Combi" },

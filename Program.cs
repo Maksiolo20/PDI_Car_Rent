@@ -35,7 +35,7 @@ builder.Services.AddDbContext<DatabaseContext>(x =>
 
 builder.Services.AddScoped<IRepositoryService<CarType>, RepositoryService<CarType>>();
 builder.Services.AddScoped<IRepositoryService<CarRentPlaceViewModel>, RepositoryService<CarRentPlaceViewModel>>();
-builder.Services.AddScoped<IRepositoryService<Car>, RepositoryService<Car>>();
+builder.Services.AddTransient<IRepositoryService<Car>, RepositoryService<Car>>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<SignInManager<IdentityUser>>();
 builder.Services.AddScoped<UserManager<IdentityUser>>();
@@ -61,8 +61,9 @@ using (var scope = app.Services.CreateScope())
     ApplicationDbInitializer applicationDbInitializer = new ApplicationDbInitializer(_userManager, _carContext);
     applicationDbInitializer.SeedUsers();
     applicationDbInitializer.SeedRentStatuses();
+    applicationDbInitializer.SeedCarTypes();
     applicationDbInitializer.SeedCars();
-    applicationDbInitializer.SeedRentStatuses();
+    applicationDbInitializer.SeedRentPlaces();
 }
 
 //using (var context = new DatabaseContext(options))
