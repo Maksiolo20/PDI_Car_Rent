@@ -55,8 +55,14 @@ using (var scope = app.Services.CreateScope())
     UserManager<IdentityUser> _userManager =
         (UserManager<IdentityUser>)scope.ServiceProvider.GetService(typeof(UserManager<IdentityUser>));
 
-    ApplicationDbInitializer applicationDbInitializer = new ApplicationDbInitializer(_userManager);
-    applicationDbInitializer.SeedUsers(_userManager);
+    DatabaseContext _carContext =
+       (DatabaseContext)scope.ServiceProvider.GetService(typeof(DatabaseContext));
+
+    ApplicationDbInitializer applicationDbInitializer = new ApplicationDbInitializer(_userManager, _carContext);
+    applicationDbInitializer.SeedUsers();
+    applicationDbInitializer.SeedRentStatuses();
+    applicationDbInitializer.SeedCars();
+    applicationDbInitializer.SeedRentStatuses();
 }
 
 //using (var context = new DatabaseContext(options))

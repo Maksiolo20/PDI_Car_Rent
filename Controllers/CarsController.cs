@@ -73,7 +73,7 @@ namespace Pdi_Car_Rent.Data
                 .GetAllRecords()
                 .Where(x=>x.CarRentPlaceID == _carPlaceRepository
                                                 .GetAllRecords()
-                                                .First(x => x.WorkerId == id).Id);
+                                                .First(x => x.WorkerId == id).Id).ToList();
             var viewModel = Cars.Select(r => _mapper.Map<CarIndexViewModel>(r));
             return View(viewModel);
         }
@@ -111,8 +111,8 @@ namespace Pdi_Car_Rent.Data
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CarId,Name,RentPriceForHour,CarInfo,CarTypeId,CarRentPlaceID")] Car car)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 if (User.IsInRole("Pracownik"))
                 {
                     string id = _userManager.GetUserId(User);
@@ -123,10 +123,10 @@ namespace Pdi_Car_Rent.Data
                 _carRepository.Add(car);
                 _carRepository.Save();
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "Id", "PlaceName"/*,car.CarRentPlaceID*/);
             ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "Id", "Name"/*, car.CarTypeId*/);
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Cars/Edit/5

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Pdi_Car_Rent.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace Pdi_Car_Rent.Models
 {
@@ -11,5 +12,6 @@ namespace Pdi_Car_Rent.Models
 
         public string CarType { get; set; }
         public int? CarRentPlaceID { get; set; }
+        public RentStatus RentStatus { get; set; } 
     }
 }

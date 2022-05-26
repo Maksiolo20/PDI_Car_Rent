@@ -29,8 +29,10 @@ namespace Pdi_Car_Rent.Data
                 .WithMany(y => y.Rents)
                 .HasForeignKey(z => z.RentId);
 
-            modelBuilder.Entity<Rent>()
-                .HasOne<RentStatus>(x => x.RentStatus);
+            modelBuilder.Entity<Car>()
+                .HasOne<RentStatus>(x => x.RentStatus)
+                .WithMany(y => y.Cars)
+                .HasForeignKey(z => z.RentStatusID);
 
             modelBuilder.Entity<Car>()
                 .HasOne<CarRentPlaceViewModel>(x => x.CarRentPlace)

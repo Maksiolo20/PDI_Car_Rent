@@ -1,53 +1,92 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Pdi_Car_Rent.Data;
+using Pdi_Car_Rent.Models;
 
 namespace Pdi_Car_Rent.Services
 {
     public class ApplicationDbInitializer
     {
         private readonly UserManager<IdentityUser> _userManager;
-        public ApplicationDbInitializer(UserManager<IdentityUser> userManager)
+        private readonly DatabaseContext _context;
+        public ApplicationDbInitializer(UserManager<IdentityUser> userManager, DatabaseContext context)
         {
             _userManager = userManager;
+            _context = context;
             //SeedUsers(_userManager);
         }
-        public void SeedUsers(UserManager<IdentityUser> userManager)
+        public void SeedRentStatuses()
         {
-            if (userManager.FindByEmailAsync("Administrator").Result == null)
+            List<RentStatus> rentStatuses = new()
             {
-                IdentityUser admin = new IdentityUser
+                new RentStatus {/*RentStatusId=0,*/RentStatusName = "Dostępny" },
+                new RentStatus {/*RentStatusId=1,*/RentStatusName = "Rezerwacja" },
+                new RentStatus {/*RentStatusId=2,*/RentStatusName = "Wypożyczony" },
+            };
+            foreach (var item in rentStatuses)
+            {
+                _context.RentStatuses.Add(item);
+            }
+            _context.SaveChanges();
+        }
+        public void SeedRentPlaces()
+        {
+            List<CarRentPlaceViewModel> Places = new()
+            {
+                new CarRentPlaceViewModel { PlaceName = "Bielsko-Biała", Address = "Willowa 2" },
+                new CarRentPlaceViewModel { PlaceName = "Katowice", Address = "Kościuszki 96" },
+            };
+            foreach (var item in Places)
+            {
+                _context.CarRentPlace.Add(item);
+            }
+            _context.SaveChanges();
+        }
+        public void SeedCars()
+        {
+            List<CarType> Types = new()
+            {
+                new CarType { /*CarTypeId = 1,*/ Name = "Combi" },
+                new CarType { /*CarTypeId = 2,*/ Name = "Sedan" },
+            };
+            foreach (var item in Types)
+            {
+                _context.CarTypes.Add(item);
+            }
+            _context.SaveChanges();
+        }
+        public void SeedUsers()
+        {
+            if (_userManager.FindByEmailAsync("Administrator").Result == null)
+            {
+                List<IdentityUser> identityUsers = new()
                 {
-                    UserName = "Administrator",
-                    Email = "Administrator"
-                };
+                    new IdentityUser
+                    {
+                        UserName = "Administrator",
+                        Email = "Administrator"
+                    },
 
-                IdentityUser worker = new IdentityUser
-                {
-                    UserName = "Pracownik",
-                    Email = "Pracownik"
-                };
+                    new IdentityUser
+                    {
+                        UserName = "Pracownik",
+                        Email = "Pracownik"
+                    },
 
-                IdentityUser user = new IdentityUser
-                {
-                    UserName = "Uzytkownik",
-                    Email = "Uzytkownik"
+                    new IdentityUser
+                    {
+                        UserName = "Uzytkownik",
+                        Email = "Uzytkownik"
+                    },
                 };
-
                 string password = "P@$$w0rd";
-                IdentityResult adminResult = userManager.CreateAsync(admin, password).Result;
-                IdentityResult workerResult = userManager.CreateAsync(worker, password).Result;
-                IdentityResult userResult = userManager.CreateAsync(user, password).Result;
+                foreach (var item in identityUsers)
+                {
+                    IdentityResult Result = _userManager.CreateAsync(item, password).Result;
+                    if (Result.Succeeded)
+                    {
+                        _userManager.AddToRoleAsync(item, item.UserName.ToString()).Wait();
+                    }
 
-                if (adminResult.Succeeded)
-               {
-                    userManager.AddToRoleAsync(admin, "Administrator").Wait();
-                }
-                if (workerResult.Succeeded)
-                {
-                    userManager.AddToRoleAsync(worker, "Pracownik").Wait();
-                }
-                if (userResult.Succeeded)
-                {
-                    userManager.AddToRoleAsync(user, "Uzytkownik").Wait();
                 }
             }
         }

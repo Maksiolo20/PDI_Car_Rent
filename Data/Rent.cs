@@ -10,8 +10,6 @@ namespace Pdi_Car_Rent.Data
         public DateTime CreationDate { get; set; }
         public DateTime BeginDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int RentStatusID { get; set; }
-        public RentStatus RentStatus  { get; set; }
         public int ClientId { get; set; }
         public Car Car { get; set; }
         public int CarId { get; set; }

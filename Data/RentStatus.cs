@@ -7,6 +7,6 @@ namespace Pdi_Car_Rent.Data
         [Key]
         public int RentStatusId { get; set; }
         public string RentStatusName { get; set; }
-        public ICollection<Rent> Rents { get; set; }
+        public ICollection<Car> Cars { get; set; }
     }
 }

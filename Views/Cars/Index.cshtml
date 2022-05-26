@@ -24,16 +24,18 @@
             <th>
                 @Html.DisplayNameFor(model => model.CarType)
             </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.CarRentPlace)
-            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.RentStatus.RentStatusName)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
+        @if(Model.Count()<0){
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
@@ -41,6 +43,12 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CarInfo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RentStatus.RentStatusName)
             </td>
            @* <td>
                 @Html.DisplayFor(modelItem => item.CarType.CarTypeId)
@@ -58,6 +66,7 @@
             </td>
 
         </tr>
+        }
 }
     </tbody>
 </table>
