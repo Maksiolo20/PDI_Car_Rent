@@ -11,7 +11,7 @@ namespace Pdi_Car_Rent.Mapper
         {
             CreateMap<Car, CarIndexViewModel>()
                 .ForMember(r => r.CarType, opt => opt.MapFrom<string>(r => r.CarType.Name))
-                .ForMember(x=>x.CarId,opt =>opt.MapFrom<int>(x=>x.Id));
+                .ForMember(x => x.CarId, opt => opt.MapFrom<int>(x => x.Id));
             CreateMap<Car, CarDetailsViewModel>()
                 .ForMember(r => r.CarType, opt => opt.MapFrom<string>(r => r.CarType.Name))
                 .ForMember(x => x.CarId, opt => opt.MapFrom<int>(x => x.Id));
