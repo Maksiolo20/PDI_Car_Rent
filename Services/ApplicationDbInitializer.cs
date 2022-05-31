@@ -45,8 +45,8 @@ namespace Pdi_Car_Rent.Services
         {
             List<Car> Cars = new()
             {
-                new Car {Name = "Wołga", CarInfo = "Czarna", CarRentPlaceID = 0, CarTypeId = 0, RentPriceForHour = 30, RentStatusID = 0 },
-                new Car {Name = "Mazda", CarInfo = "MX-5", CarRentPlaceID = 1, CarTypeId = 1, RentPriceForHour = 40, RentStatusID = 0 },
+                new Car {Name = "Wołga", CarInfo = "Czarna", CarRentPlaceID = 0, CarTypeId = 0, RentPriceForHour = 30, RentStatusID = 1 },
+                new Car {Name = "Mazda", CarInfo = "MX-5", CarRentPlaceID = 1, CarTypeId = 1, RentPriceForHour = 40, RentStatusID = 1 },
 
             };
             foreach (var item in Cars)

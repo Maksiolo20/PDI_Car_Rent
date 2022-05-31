@@ -58,6 +58,11 @@ namespace Pdi_Car_Rent.Data
                 foreach (Car item in Cars)
                 {
                     item.CarType = _carTypeRepository.FindBy(x => x.Id == item.CarTypeId).First();
+                    //var query = _databaseContext.RentStatuses.ToList();
+                    //foreach (var elem in query)
+                    //{
+                    //    elem.RentStatusId=elem.RentStatusId;
+                    //}
                     item.RentStatus = _databaseContext.RentStatuses.First(x => x.RentStatusId == item.RentStatusID);
                     cars.Add(this._mapper.Map<CarIndexViewModel>(item));
                 }
