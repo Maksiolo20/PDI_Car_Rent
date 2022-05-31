@@ -143,6 +143,7 @@ namespace Pdi_Car_Rent.Data
                 Name = car.Name,
                 CarInfo = car.CarInfo,
                 CarRentPlaceID = car.CarRentPlaceID,
+                RentStatus = car.RentStatus
                 //CarTypeList = _context.CarTypes.ToList()
             };
 
@@ -152,6 +153,7 @@ namespace Pdi_Car_Rent.Data
             }
             ViewData["CarRentPlaceID"] = new SelectList(_carPlaceRepository.GetAllRecords(), "Id", "PlaceName" /*,model.CarRentPlaceID*/);
             ViewData["CarTypeId"] = new SelectList(_carTypeRepository.GetAllRecords(), "Id", "Name" /*,model.CarTypeId*/);
+            ViewData["RentStatus"] = new SelectList(_databaseContext.Cars.ToList(), "RentStatusID", "RentStatus");
             return View(model);
         }
 

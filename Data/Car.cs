@@ -13,7 +13,7 @@ namespace Pdi_Car_Rent.Data
         public string? CarInfo { get; set; }
         public int? CarTypeId { get; set; }
         public CarType? CarType { get; set; }
-        public int RentStatusID { get; set; } = 0;
+        public int RentStatusID { get; set; } = 1;
         public RentStatus RentStatus { get; set; }
         public ICollection<Rent>? Rents { get; set; }
         //public List<string> Photos { get; set; } = new List<string>();
