@@ -16,6 +16,7 @@ namespace Pdi_Car_Rent.Data
 {
     public class CarsController : Controller
     {
+        private readonly DatabaseContext _databaseContext;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepositoryService<CarType> _carTypeRepository;
         private readonly IRepositoryService<CarRentPlaceViewModel> _carPlaceRepository;
@@ -25,12 +26,14 @@ namespace Pdi_Car_Rent.Data
 
 
         public CarsController(
+            DatabaseContext databaseContext,
             IRepositoryService<CarType> carTypeRepository,
             IRepositoryService<Car> carRepository,
             IRepositoryService<CarRentPlaceViewModel> carPlaceRepository,
             IMapper mapper,
             UserManager<IdentityUser> userManager)
         {
+            _databaseContext = databaseContext;
             _userManager = userManager;
             _carTypeRepository = carTypeRepository;
             _carPlaceRepository = carPlaceRepository;
@@ -47,12 +50,18 @@ namespace Pdi_Car_Rent.Data
             if (User.IsInRole("Pracownik"))
             {
                 string id = _userManager.GetUserId(User);
-                var Cars = _carRepository
+                List<Car> Cars = _carRepository
                     .GetAllRecords()
-                    .Select(x => x.CarRentPlaceID == _carPlaceRepository
+                    .Where(x => x.CarRentPlaceID == _carPlaceRepository
                                                     .GetAllRecords()
                                                     .First(x => x.WorkerId == id).Id).ToList();
-                cars = Cars.Select(r => _mapper.Map<CarIndexViewModel>(r)).ToList();
+                foreach (Car item in Cars)
+                {
+                    item.CarType = _carTypeRepository.FindBy(x => x.Id == item.CarTypeId).First();
+                    item.RentStatus = _databaseContext.RentStatuses.First(x => x.RentStatusId == item.RentStatusID);
+                    cars.Add(this._mapper.Map<CarIndexViewModel>(item));
+                }
+
             }
             else if (User.IsInRole("Administrator"))
             {
