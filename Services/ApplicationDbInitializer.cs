@@ -32,7 +32,7 @@ namespace Pdi_Car_Rent.Services
         {
             List<CarRentPlaceViewModel> Places = new()
             {
-                new CarRentPlaceViewModel { PlaceName = "Bielsko-Biała", Address = "Willowa 2" },
+                new CarRentPlaceViewModel { PlaceName = "Bielsko-Biała", Address = "Willowa 2", WorkerId = _userManager.FindByNameAsync("Pracownik").Result.Id},
                 new CarRentPlaceViewModel { PlaceName = "Katowice", Address = "Kościuszki 96" },
             };
             foreach (var item in Places)
@@ -104,5 +104,6 @@ namespace Pdi_Car_Rent.Services
                 }
             }
         }
+
     }
 }
