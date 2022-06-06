@@ -41,6 +41,8 @@ builder.Services.AddScoped<SignInManager<IdentityUser>>();
 builder.Services.AddScoped<UserManager<IdentityUser>>();
 builder.Services.AddScoped<ApplicationDbInitializer>();
 
+builder.Services.AddResponseCaching(x=> x.MaximumBodySize = 1024);
+
 //builder.Services.AddScoped<IEntity<int>,I
 var app = builder.Build();
 
@@ -89,6 +91,17 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.Use(async (context, next) =>
+{
+    context.Response.GetTypedHeaders().CacheControl =
+        new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+        {
+            Public = true,
+            MaxAge = TimeSpan.FromSeconds(10)
+        };
+    await next();
+});
 
 app.UseEndpoints(endpoints =>
 {
