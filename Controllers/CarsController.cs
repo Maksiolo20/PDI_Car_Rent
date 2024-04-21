@@ -47,31 +47,31 @@ namespace Pdi_Car_Rent.Data
         {
 
             List<CarIndexViewModel> cars = new();
-            if (User.IsInRole("Pracownik"))
-            {
-                string id = _userManager.GetUserId(User);
-                List<Car> Cars = _carRepository
-                    .GetAllRecords()
-                    .Where(x => x.CarRentPlaceID == _carPlaceRepository
-                                                    .GetAllRecords()
-                                                    .First(x => x.WorkerId == id).Id).ToList();
-                foreach (Car item in Cars)
-                {
-                    item.CarType = _carTypeRepository.FindBy(x => x.Id == item.CarTypeId).First();
-                    //var query = _databaseContext.RentStatuses.ToList();
-                    //foreach (var elem in query)
-                    //{
-                    //    elem.RentStatusId=elem.RentStatusId;
-                    //}
-                    item.RentStatus = _databaseContext.RentStatuses.First(x => x.RentStatusId == item.RentStatusID);
-                    cars.Add(this._mapper.Map<CarIndexViewModel>(item));
-                }
+            //if (User.IsInRole("Pracownik"))
+            //{
+            //    string id = _userManager.GetUserId(User);
+            //    List<Car> Cars = _carRepository
+            //        .GetAllRecords()
+            //        .Where(x => x.CarRentPlaceID == _carPlaceRepository
+            //                                        .GetAllRecords()
+            //                                        .First(x => x.WorkerId == id).Id).ToList();
+            //    foreach (Car item in Cars)
+            //    {
+            //        item.CarType = _carTypeRepository.FindBy(x => x.Id == item.CarTypeId).First();
+            //        //var query = _databaseContext.RentStatuses.ToList();
+            //        //foreach (var elem in query)
+            //        //{
+            //        //    elem.RentStatusId=elem.RentStatusId;
+            //        //}
+            //        item.RentStatus = _databaseContext.RentStatuses.First(x => x.RentStatusId == item.RentStatusID);
+            //        cars.Add(this._mapper.Map<CarIndexViewModel>(item));
+            //    }
 
-            }
-            else if (User.IsInRole("Administrator"))
-            {
+            //}
+            //else if (User.IsInRole("Administrator"))
+            //{
                 cars = _carRepository.GetAllRecords().Select(r => _mapper.Map<CarIndexViewModel>(r)).ToList();
-            }
+            //}
             return View(cars);
         }
 
